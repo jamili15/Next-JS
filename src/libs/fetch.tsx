@@ -22,7 +22,7 @@ export function isResponseSuccess(data: any): data is ResponseSuccess {
 }
 
 export function isResponseError(data: any): data is ResponseError {
-  return typeof data === "object" && "code" in data && "message" in data;
+  return typeof data === "object" && "code" in data && "error" in data;
 }
 
 export function isResponseRedirect(data: any): data is ResponseRedirect {
@@ -31,14 +31,14 @@ export function isResponseRedirect(data: any): data is ResponseRedirect {
 
 export type FetchRequest = {
   method: string;
-  data: {
+  data?: {
     __partnerid?: string;
-    __service: string;
-    __method: string;
-    __connection: string;
+    __service?: string;
+    __method?: string;
+    __connection?: string;
     [key: string]: any;
   };
-  options: RequestInit;
+  options?: RequestInit;
 };
 
 export const encodeArgs = (param: any) => {
@@ -111,7 +111,7 @@ export const getData = async (
 
 export const postData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -126,12 +126,7 @@ export const postData = async (
     });
 
     if (res.ok) {
-      const data = await res.json();
-      if (data.error) {
-        return { error: data.error };
-      } else {
-        return data;
-      }
+      return await res.json();
     } else {
       return { error: "A data error is encountered. Please try again." };
     }
@@ -145,7 +140,7 @@ export const postData = async (
 
 export const putData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -189,7 +184,7 @@ export const putData = async (
 
 export const deleteData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -229,7 +224,7 @@ export const deleteData = async (
 
 export const makeRequest = (
   url: string,
-  request: FetchRequest
+  request: FetchRequest = { method: "GET", data: {} }
 ): Promise<ResponseSuccess | ResponseRedirect | ResponseError> => {
   if ("GET" === request.method) {
     return getData(url, request.data, request.options);
@@ -268,15 +263,15 @@ const CreateAsyncInternal = (
     setProcessing(true);
 
     return func(...params)
-      .then((data: any) => {
-        if (isResponseError(data)) {
-          setError(data.error);
+      .then((res: any) => {
+        console.log("RES", res);
+        if (isResponseError(res)) {
+          setError(res.error);
           setValue(undefined);
-          return Promise.reject(data.error);
         } else {
-          setValue(data);
+          setValue(res.data);
           setError(undefined);
-          return data;
+          return res.data;
         }
       })
       .finally(() => {
