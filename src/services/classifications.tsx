@@ -1,13 +1,12 @@
 import { makeRequest } from "@/libs/fetch";
 
-export const getClassification = () => {
+export const getClassifications = () => {
   return makeRequest("/api/service", {
     method: "GET",
     data: {
       __service: "FAASListService",
-      __method: "getClassification",
+      __method: "getClassifications",
       __connection: "etracs",
     },
-    options: {}, // Empty object as options
   });
 };

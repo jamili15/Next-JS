@@ -1,18 +1,9 @@
 import Button from "@/components/ui/Button";
 import { createFetch } from "@/libs/fetch";
-import { getClassification } from "@/services/classifications";
-import { useState } from "react";
+import { getClassifications } from "@/services/rpt";
 
 export default function Home() {
-  const [processing, setProcessing] = useState(false);
-
-  const { value: classifications, execute } = createFetch(getClassification);
-
-  async function helloHandler() {
-    const res = await fetch("/api/hello");
-    const data = await res.json();
-    console.log("data", data);
-  }
+  const { value: classifications, execute } = createFetch(getClassifications);
 
   function classificationHandler() {
     execute();
@@ -20,9 +11,8 @@ export default function Home() {
 
   return (
     <main>
-      <h1 className="bg-red-300">Home Page</h1>
+      <h1 className="bg-orange-300">Home Page</h1>
       <Button text="View Partners" href="/partners" />
-      <Button text={"Say hello"} onClick={helloHandler} />
       <Button text="Classifications" onClick={classificationHandler} />
 
       <pre>{JSON.stringify(classifications)}</pre>
