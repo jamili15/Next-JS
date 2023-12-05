@@ -12,8 +12,10 @@ export default function Home() {
   return (
     <main>
       <h1 className="bg-orange-300">Home Page</h1>
-      <Button text="View Partners" href="/partners" />
-      <Button text="Classifications" onClick={classificationHandler} />
+      <div className="flex gap-2">
+        <Button text="View Partners" href="/partners" />
+        <Button text="Classifications" onClick={classificationHandler} />
+      </div>
 
       <pre>{JSON.stringify(classifications)}</pre>
     </main>
