@@ -1,31 +1,31 @@
-import React from "react";
 import Link from "next/link";
 
 function Button({
   text,
   onClick,
   href,
+  disabled = false,
 }: {
   text: string;
   onClick?: () => void;
   href?: string;
+  disabled?: boolean;
 }) {
+  let className = "border-solid border-2 border-blue-400 px-2 py-1 rounded-lg ";
+  if (disabled) {
+    className += "bg-gray-300";
+  }
+
   if (href) {
     return (
-      <Link
-        className="border-2 border-blue-400 bg-slate-200 px-2 py-1 rounded-lg"
-        href={href}
-      >
+      <Link className={className} href={href}>
         {text}
       </Link>
     );
   }
 
   return (
-    <button
-      className="border-2 border-blue-400 bg-slate-200 px-2 py-1 rounded-lg"
-      onClick={onClick}
-    >
+    <button className={className} onClick={onClick} disabled={disabled}>
       {text}
     </button>
   );

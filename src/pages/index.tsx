@@ -1,12 +1,22 @@
 import Button from "@/components/ui/Button";
 import { createFetch } from "@/libs/fetch";
-import { getClassifications } from "@/services/rpt";
+import { getClassifications, saveClassifications } from "@/services/rpt";
 
 export default function Home() {
-  const { value: classifications, execute } = createFetch(getClassifications);
+  const { value, processing, error, execute } =
+    createFetch(saveClassifications);
 
   function classificationHandler() {
     execute();
+  }
+  function saveClassificationHandler() {
+    const classification = {
+      code: "TEST1234",
+      name: "TEST 234",
+      special: true,
+      orderno: 5,
+    };
+    execute(classification);
   }
 
   return (
@@ -14,10 +24,19 @@ export default function Home() {
       <h1 className="bg-orange-300">Home Page</h1>
       <div className="flex gap-2">
         <Button text="View Partners" href="/partners" />
-        <Button text="Classifications" onClick={classificationHandler} />
+        <Button
+          text="Classifications"
+          onClick={classificationHandler}
+          disabled={processing}
+        />
+        <Button
+          text={"Save Classification"}
+          onClick={saveClassificationHandler}
+          disabled={processing}
+        />
       </div>
-
-      <pre>{JSON.stringify(classifications)}</pre>
+      {error && <p>ERROR: {error}</p>}
+      <pre>{JSON.stringify(value)}</pre>
     </main>
   );
 }
